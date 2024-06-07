@@ -1,29 +1,36 @@
-import {CounterId, DecrementAction, IncrementAction, selectCounter} from "./counters.slice.ts";
-import {useAppDispatch, useAppSelector} from "../../store.ts";
+import {
+  CounterId,
+  decrementAction,
+  incrementAction,
+  selectCounter,
+} from "./counters.slice.ts";
+import { useAppDispatch, useAppSelector } from "../../store.ts";
 
 export function Counter({ counterId }: { counterId: CounterId }) {
   const dispatch = useAppDispatch();
   const counterState = useAppSelector((state) =>
-    selectCounter(state, counterId)
+    selectCounter(state, counterId),
   );
+
+  // const actions = bindActionCreators(
+  //   {
+  //     incrementAction,
+  //     decrementAction,
+  //   },
+  //   dispatch,
+  // );
 
   console.log("render counter", counterState);
 
-  return <div className="card">
-    Count: {counterState?.counter}
-    <button
-      onClick={() =>
-        dispatch({type: "INCREMENT", payload: { counterId }} satisfies IncrementAction)
-      }
-    >
-      increment
-    </button>
-    <button
-      onClick={() =>
-        dispatch({type: "DECREMENT", payload: { counterId }} satisfies DecrementAction)
-      }
-    >
-      decrement
-    </button>
-  </div>
+  return (
+    <div className="card">
+      Count: {counterState?.counter}
+      <button onClick={() => dispatch(incrementAction({ counterId }))}>
+        increment
+      </button>
+      <button onClick={() => dispatch(decrementAction({ counterId }))}>
+        decrement
+      </button>
+    </div>
+  );
 }

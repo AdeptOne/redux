@@ -1,10 +1,20 @@
-import {AppState} from "../../store.ts";
+import { AppState } from "../../store.ts";
+import { createAction } from "@reduxjs/toolkit";
 
 export type CounterId = string;
 type CounterState = {
   counter: number;
-}
-type CountersState =  Record<CounterId, CounterState | undefined>;
+};
+
+type CountersState = Record<CounterId, CounterState | undefined>;
+
+export const incrementAction = createAction<{
+  counterId: CounterId;
+}>("counters/increment");
+
+export const decrementAction = createAction<{
+  counterId: CounterId;
+}>("counters/decrement");
 
 export type IncrementAction = {
   type: "INCREMENT";
@@ -26,7 +36,10 @@ const initialCounterState: CounterState = { counter: 0 };
 
 const initialCountersState: CountersState = {};
 
-export const countersReducer = (state = initialCountersState, action: Action): CountersState => {
+export const countersReducer = (
+  state = initialCountersState,
+  action: Action,
+): CountersState => {
   switch (action.type) {
     case "INCREMENT": {
       const { counterId } = action.payload;
@@ -37,8 +50,8 @@ export const countersReducer = (state = initialCountersState, action: Action): C
           ...state,
           [counterId]: {
             ...currentCounter,
-            counter: currentCounter.counter + 1
-          }
+            counter: currentCounter.counter + 1,
+          },
         };
       }
       return state;
@@ -51,8 +64,8 @@ export const countersReducer = (state = initialCountersState, action: Action): C
           ...state,
           [counterId]: {
             ...currentCounter,
-            counter: currentCounter.counter - 1
-          }
+            counter: currentCounter.counter - 1,
+          },
         };
       }
       return state;
