@@ -66,3 +66,48 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.user-list__item {
+  padding-bottom: 8px;
+  padding-top: 8px;
+}
+
+.user-list__item-description {
+ cursor: pointer;
+}
+
+.user-list__item-description:hover {
+ text-decoration: underline;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.text-3xl {
+  font-size: 3rem;
+}
+
+.text-xl {
+  font-size: 2rem;
+}
+
+.list-none {
+  list-style: none;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
