@@ -1,28 +1,36 @@
-import { memo, useMemo, useState } from "react";
+import { memo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store.ts";
-import { UserDeselectAction, UserId, UserSelectAction } from "./users.slice.ts";
+import { UserId, usersSlice } from "./users.slice.ts";
 
 export function UserList() {
   const [sortType, setSortType] = useState<"asc" | "desc">("asc");
 
-  const ids = useAppSelector((state) => state.users.ids);
-  const entities = useAppSelector((state) => state.users.entities);
-  const selectedUserId = useAppSelector((state) => state.users.selectedUserId);
-
-  const sortedUsers = useMemo(
-    () =>
-      ids
-        .map((id) => entities[id])
-        .sort((a, b) => {
-          switch (sortType) {
-            case "asc":
-              return a!.name.localeCompare(b!.name);
-            case "desc":
-              return b!.name.localeCompare(a!.name);
-          }
-        }),
-    [ids, entities, sortType],
+  const sortedUsers = useAppSelector((state) =>
+    usersSlice.selectors.selectSortedUsers(state, sortType),
   );
+
+  const selectedUserId = useAppSelector((state) =>
+    usersSlice.selectors.selectSelectedUserId(state),
+  );
+
+  // const ids = useAppSelector((state) => state.users.ids);
+  // const entities = useAppSelector((state) => state.users.entities);
+  // const selectedUserId = useAppSelector((state) => state.users.selectedUserId);
+
+  // const sortedUsers = useMemo(
+  //   () =>
+  //     ids
+  //       .map((id) => entities[id])
+  //       .sort((a, b) => {
+  //         switch (sortType) {
+  //           case "asc":
+  //             return a!.name.localeCompare(b!.name);
+  //           case "desc":
+  //             return b!.name.localeCompare(a!.name);
+  //         }
+  //       }),
+  //   [ids, entities, sortType],
+  // );
 
   return (
     <div className="flex flex-col items-center">
@@ -55,11 +63,15 @@ const UserListItem = memo(function UserListItem({
   const user = useAppSelector((state) => state.users.entities[userId]);
   const dispatch = useAppDispatch();
 
+  // const handleUserClick = () => {
+  //   dispatch({
+  //     type: "USER_SELECT",
+  //     payload: { userId: user!.id },
+  //   } satisfies UserSelectAction);
+  // };
+
   const handleUserClick = () => {
-    dispatch({
-      type: "USER_SELECT",
-      payload: { userId: user!.id },
-    } satisfies UserSelectAction);
+    dispatch(usersSlice.actions.select({ userId: user!.id }));
   };
 
   return (
@@ -73,10 +85,14 @@ function SelectedUser({ userId }: { userId: UserId }) {
   const user = useAppSelector((state) => state.users.entities[userId]);
 
   const dispatch = useAppDispatch();
+  // const handleDeselectUserClick = () => {
+  //   dispatch({
+  //     type: "USER_DESELECT",
+  //   } satisfies UserDeselectAction);
+  // };
+
   const handleDeselectUserClick = () => {
-    dispatch({
-      type: "USER_DESELECT",
-    } satisfies UserDeselectAction);
+    dispatch(usersSlice.actions.deselect);
   };
 
   return (
